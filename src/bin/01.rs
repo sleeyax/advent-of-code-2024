@@ -1,3 +1,5 @@
+use itertools::Itertools;
+
 advent_of_code::solution!(1);
 
 fn parse_input(input: &str) -> (Vec<i32>, Vec<i32>) {
@@ -26,8 +28,17 @@ pub fn part_one(input: &str) -> Option<i32> {
     Some(result)
 }
 
-pub fn part_two(input: &str) -> Option<u32> {
-    None
+pub fn part_two(input: &str) -> Option<i32> {
+    let lists = parse_input(&input);
+
+    let map = lists.1.into_iter().counts();
+
+    let mut similarity_score: i32 = 0;
+    for num in lists.0 {
+        similarity_score += num * *map.get(&num).unwrap_or(&0) as i32;
+    }
+
+    Some(similarity_score)
 }
 
 #[cfg(test)]
@@ -43,6 +54,6 @@ mod tests {
     #[test]
     fn test_part_two() {
         let result = part_two(&advent_of_code::template::read_file("examples", DAY));
-        assert_eq!(result, None);
+        assert_eq!(result, Some(31));
     }
 }
